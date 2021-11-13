@@ -49,8 +49,8 @@ def start(update: Update, context: CallbackContext) -> None:
         #    InlineKeyboardButton("Option 2", callback_data='2'),
         #],
         [
-            InlineKeyboardButton("Check last product versions", callback_data='release'),
-            InlineKeyboardButton("Generate product key", callback_data='QA')
+            InlineKeyboardButton("Check last product versions", callback_data='new_versions'),
+            InlineKeyboardButton("Generate product key", callback_data='generate_key')
         ]
     ]
 
@@ -68,10 +68,14 @@ def button(update: Update, context: CallbackContext) -> None:
     query.answer()
    # query.edit_message_text(text=f"Selected option: {query.data}")
     instal_path = 'PublicDX//QA'
-    main.connectDX()
-    msg = main.new_versions(query.data)
-    main.disconnect()
-    query.edit_message_text(text=msg)
+    if query.data == 'new_versions':
+        main.connectDX()
+        query.edit_message_text(text=main.new_versions())
+        main.disconnect()
+    elif query.data == 'generate_key':
+        query.edit_message_text(text="It doesn't works. Man works on it.")
+        pass
+    
 
 
 def help_command(update: Update, context: CallbackContext) -> None:
