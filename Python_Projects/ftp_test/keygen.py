@@ -1,9 +1,16 @@
 import re
 
 
-def get_ampl_key(date:str, ampl_num:int, device_type:int, d_set:int):
-    """Concardate next digits: date(MMYY), ampl_num(DDDDD), device_type(DD), set(D) """
-    return "112109999011"
+def get_ampl_key():
+    """Concardate next digits: date(MMYY), ampl_num(DDDDD), device_type(DD), set(D)
+    date:str, ampl_num:str, device_type:str, d_set:int"""
+    date=get_date()
+    ampl_num=get_ampl_num()
+    device_type=get_device_type()
+    d_set=get_set(device_type)
+    ampl_key=date+ampl_num+device_type+str(d_set)
+    print(ampl_key)
+    return ampl_key
 
 def get_controlsumm(skey):
     controlsumm = 0
@@ -45,8 +52,9 @@ def get_product_key(ampl_key):
     return key4
 
 def main():
-    #get_ampl_key(date, ampl_num, device_type, d_set)
-    test_get_ampl_key()
+    ampl_key=get_ampl_key()
+    product_key=get_product_key(ampl_key)
+    print(product_key)
 
 
 
@@ -80,7 +88,7 @@ def test_get_product_key():
 #test_get_ampl_key()
 #test_get_product_key()
 def input_from_prompt():
-    """Recives next digits: date(MMYY), ampl_num(DDDDD), device_type(DD), set(D)
+    """Recives next digits: date(MMYY), ampl_num(DDDDD), device_type(DD), set_num(D)
             and returns ampl_key"""
     pass
 
@@ -174,6 +182,43 @@ def get_ampl_num():
     print('Amplifier number: '+ampl_num)
     return ampl_num
 
-get_date()
-get_device_type()
-get_ampl_num()
+def get_set(device_type=0):
+    """Case 0 or 4
+	    1 BASE|2 EP|3 EP+CP|4 VIDEO|5 EP+VIDEO|6 EP+CP+VIDEO
+    Case 1 or 5
+	    1 BASE|2 EP|3 EP+CP
+	Case 2
+		1 REG|2 REG\RVG|3 FULL
+	Case 3
+	    1 ST|2 ERGO"""
+    str_device_type=str(device_type)
+    first_digit=int(str_device_type[0])
+    if first_digit in (0,4):
+        correct_num=range(1,7)
+    elif first_digit in (1,5):
+        correct_num=range(1,4)
+    elif first_digit==2:
+        correct_num=range(1,4)
+    else:
+        correct_num = range(1,3)
+
+    set_num = 0
+    while True:
+        try:
+            set_num = int(input('Enter Setting number: '))
+            assert set_num in correct_num
+        except ValueError:
+            print("Not an integer! Please enter an integer.")
+        except AssertionError:
+            print("Please enter an integer between "+str(correct_num[0])+" and "+str(correct_num[-1]))
+        else:
+            break
+    print('Setting number: ' + str(set_num))
+    return set_num
+
+#get_date()
+#device_type=get_device_type()
+#get_ampl_num()
+#get_set(device_type)
+#get_ampl_key()
+#main()
